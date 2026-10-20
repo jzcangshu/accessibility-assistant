@@ -1,0 +1,75 @@
+/* 悬浮窗（/?overlay=1）：紧凑结果卡，只保留内容文字与结果。
+   正文窗口整窗鼠标穿透，收不到滚轮/点击；翻页与重试由上方原生工具条驱动。
+   规则全部以 body.overlay 限定，不影响手机页与 PC 控制台。 */
+
+body.overlay {
+  margin: 0;
+  padding: 6px 0 10px;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: #0d0d0d;
+  font-size: 13px;
+}
+html.overlay { height: 100%; }
+html.overlay { scrollbar-width: none; }
+body.overlay::-webkit-scrollbar { width: 0; height: 0; }
+
+/* 悬浮页不显示连接头、Tab 栏、遥控截图面板和图片预览 */
+body.overlay #phone-root > header,
+body.overlay #tabbar,
+body.overlay #snap-dock,
+body.overlay #empty-state,
+body.overlay #fit-note,
+body.overlay #pc-root,
+body.overlay #lightbox { display: none !important; }
+
+body.overlay #phone-root main { padding: 0; max-width: none; }
+body.overlay #view-main { padding-bottom: 0; }
+
+/* 内容：小字号、弱一级，给结果让出视觉重心 */
+body.overlay #q-card {
+  margin: 0 8px 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+body.overlay #q-card .q-meta,
+body.overlay #q-images,
+body.overlay #q-card .btn-row { display: none !important; }
+body.overlay #q-text {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+body.overlay #q-note { margin: 4px 0 0; font-size: 11px; }
+
+/* 结果：整个窗口的主角 */
+body.overlay #ans-card {
+  margin: 0 8px 8px;
+  padding: 8px 10px 10px;
+  border-radius: 8px;
+}
+body.overlay #ans-status { padding: 8px 0; font-size: 12px; }
+body.overlay #ans-answer {
+  padding: 2px 0;
+  font-size: clamp(30px, 16vw, 44px);
+  line-height: 1.15;
+}
+body.overlay #ans-list { padding: 0; }
+body.overlay .mrow { padding: 6px 0; gap: 8px; }
+body.overlay .mnum { min-width: 1.6em; font-size: 12px; }
+body.overlay .mans { max-width: 45%; font-size: 22px; }
+body.overlay .mnote { font-size: 11px; line-height: 1.45; }
+body.overlay #ans-analysis,
+body.overlay #ans-meta,
+body.overlay #btn-re-ask { display: none !important; }
+
+body.overlay #toast {
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  max-width: none;
+  transform: none;
+  padding: 8px 10px;
+  font-size: 12px;
+}

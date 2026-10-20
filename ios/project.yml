@@ -1,0 +1,41 @@
+# XcodeGen 工程描述：装了 xcodegen 后在本目录执行 `xcodegen generate` 即可得到 .xcodeproj。
+# 不想装 xcodegen 也行——在 Xcode 里新建一个 iOS App 工程，把 Sources/ 里的 .swift 全拖进去，
+# 再把 Info.plist 里的键值填上即可，见 README.md。
+name: AccessibilityAssistant
+options:
+  bundleIdPrefix: io.github.jzcangshu
+  deploymentTarget:
+    # 16.0 而不是 15.0：Bonjour 浏览拿到的 metadata 关联值是 NWTXTRecord，
+    # 它在 SDK 里按 iOS 16 标注（Apple 文档写 13.0 是回溯改的，不可信）。
+    # 定在 15.0 会撞「'NWTXTRecord' is only available in iOS 16.0 or newer」。
+    iOS: "16.0"
+  createIntermediateGroups: true
+targets:
+  AccessibilityAssistant:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+    settings:
+      base:
+        INFOPLIST_FILE: Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.jzcangshu.accessibilityassistant
+        PRODUCT_NAME: AccessibilityAssistant
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: NO
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
+# 必须显式声明 scheme：XcodeGen 只给声明了 scheme 的 target 生成 scheme，
+# 否则 CI 里的 `xcodebuild -scheme AccessibilityAssistant` 会直接报找不到 scheme。
+schemes:
+  AccessibilityAssistant:
+    build:
+      targets:
+        AccessibilityAssistant: all
+    run:
+      config: Debug
+    archive:
+      config: Release

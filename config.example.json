@@ -1,0 +1,34 @@
+{
+  "server": { "host": "0.0.0.0", "port": 8765 },
+  "hotkeys": { "capture": "f8", "calibrate": "f9", "capture_region": "f10", "quit": "ctrl+alt+q", "window": "ctrl+alt+h" },
+  "capture": { "monitor": "primary", "jpeg_quality": 82, "max_width": 1600 },
+  "corner_snap": { "enabled": true, "radius": 8, "cooldown": 1.5 },
+  "swipe_snap": { "enabled": true, "min_distance": null, "cooldown": 2.0, "min_speed": 150.0, "max_speed": 380.0, "max_slope": 0.15, "max_path": 1.5, "min_span": 0.25, "still_time": 0.25 },
+  "region": null,
+  "ocr": { "enabled": false, "send_text_only": false },
+  "transfer": { "mode": "lan", "relay_url": "", "relay_token": "" },
+  "history_dir": "captures",
+  "overlay": { "opacity": 90 },
+  "allow_test_api": true,
+  "stealth": {
+    "enabled": true,
+    "anti_capture": true,
+    "title": ""
+  },
+  "settings": {
+    "_说明": "网页端设置（API 渠道 / 提示词 / 提醒等）：手机端与电脑端设置页共用这一份，在任一端的设置页改就行，不必手改这里。",
+    "channels": [],
+    "autoAsk": true,
+    "includeImage": true,
+    "autoScroll": true,
+    "tts": true,
+    "ttsAnalysis": false,
+    "bdPhonetic": false,
+    "vib": true,
+    "vibStrength": 1,
+    "vibPulseGap": 260,
+    "vibOptGap": 650,
+    "vibQuesGap": 800,
+    "overlayHover": 0.7
+  }
+}

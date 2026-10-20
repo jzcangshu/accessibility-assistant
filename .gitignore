@@ -1,0 +1,24 @@
+# 运行时数据（首次运行自动生成在程序旁边）
+config.json
+captures/
+logs/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# 构建产物
+build/
+dist/
+*.spec
+
+# iOS 构建中间产物与本地 ipa
+ios/*.xcodeproj/
+ios/build/
+ios/Payload/
+ios/DerivedData/
+ios/*.ipa
+
+# 杂项
+.DS_Store

@@ -1,0 +1,60 @@
+# 没有 Mac 也能出 ipa：在 GitHub 的 macOS 机器上编译，产物在 Artifacts 里下载，
+# 再用 Sideloadly / AltStore 从 Windows 装进 iPhone。
+# 用法：把仓库推到 GitHub → Actions 页 → 选 build-ipa → Run workflow。
+name: build-ipa
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 XcodeGen
+        run: brew install xcodegen
+
+      - name: 生成 Xcode 工程
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: 挑一个够新的 Xcode
+        # XcodeGen 2.46 生成的是 Xcode 16 的工程格式（objectVersion=77），
+        # Xcode 15.x 直接报「future Xcode project file format」打不开。
+        # 所以这里显式切到镜像里最新的那套，别用默认的。
+        run: |
+          ls -d /Applications/Xcode*.app
+          latest=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          echo "选中：$latest"
+          sudo xcode-select -s "$latest"
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos || true
+          swift --version
+
+      - name: 编译（不签名，签名交给 Sideloadly）
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project AccessibilityAssistant.xcodeproj \
+            -scheme AccessibilityAssistant \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: 打包成 ipa
+        working-directory: ios
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/AccessibilityAssistant.app Payload/
+          zip -qry AccessibilityAssistant.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AccessibilityAssistant-ipa
+          path: ios/AccessibilityAssistant.ipa

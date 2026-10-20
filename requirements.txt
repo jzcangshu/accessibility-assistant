@@ -1,0 +1,11 @@
+aiohttp>=3.9,<4
+mss>=9
+keyboard>=0.13.5
+Pillow>=10
+qrcode>=7
+psutil>=5.9
+zeroconf>=0.131
+# 主窗口：内嵌 WebView2（Chromium）——跨屏 DPI 正确 + 与手机端共用同一份网页。
+# pythonnet 是 Windows 后端（WinForms）的必需依赖，pywebview 会一并要求。
+pywebview>=5.0
+pythonnet>=3.0

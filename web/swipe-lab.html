@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>滑动手感调试 · 无障碍助手</title>
+  <link rel="stylesheet" href="/static/swipe.css?v=20261019.9">
+</head>
+<body class="swipe-lab-page">
+  <header class="lab-header" inert>
+    <div><h1>滑动手感调试</h1><p>用自然的横向动作，找到适合自己的触发手感。</p></div>
+    <div class="lab-session"><span id="lab-dot" class="lab-dot"></span><span id="lab-connection">尚未开始</span></div>
+    <button id="lab-end" class="tune-btn" disabled>结束调试</button>
+  </header>
+  <main class="lab-layout" inert>
+    <div class="lab-results">
+      <section class="lab-stage">
+        <div class="lab-stage-head"><span class="lab-eyebrow">本次滑动</span><span id="lab-mode">调试时暂停鼠标截图</span></div>
+        <div class="lab-metrics">
+          <div class="lab-distance"><strong id="lab-distance">0</strong><span>像素 <span class="lab-target">/ 目标 <b id="lab-need">—</b></span></span></div>
+          <div><strong id="lab-speed">0</strong><span>像素/秒</span></div>
+          <div><strong id="lab-span">0.00</strong><span>秒</span></div>
+        </div>
+        <div class="lab-progress" role="progressbar" aria-label="滑动距离完成度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="lab-bar"></i></div>
+        <svg class="lab-trace" viewBox="0 0 700 130" role="img" aria-label="本次鼠标滑动轨迹"><path class="lab-baseline" d="M20 65H680"/><path id="lab-trail" d=""/></svg>
+        <p id="lab-verdict" class="lab-verdict">松开鼠标键，横向移动。</p>
+      </section>
+      <section class="lab-card">
+        <div class="lab-section-head"><h2>判定明细</h2><span>实际值 / 通过条件</span></div>
+        <div id="lab-checks" class="lab-checks"><p class="lab-empty">开始后显示每项条件的实时结果。</p></div>
+      </section>
+      <section class="lab-card">
+        <div class="lab-section-head"><h2>触发记录 <span id="lab-count">0</span></h2><button id="lab-reset" class="tune-btn small" disabled>清空记录</button></div>
+        <div id="lab-recent"><p class="lab-empty">成功触发后，可在这里对照距离和速度。</p></div>
+      </section>
+    </div>
+    <aside class="lab-parameters" aria-label="试调参数">
+      <div class="lab-param-head"><h2>调整手感</h2><p>修改后立即试用，应用后才保存到软件。</p></div>
+      <div id="lab-editor"></div>
+      <div class="lab-param-footer">
+        <p id="lab-message" role="status">正在读取参数…</p>
+        <div><button id="lab-defaults" class="tune-btn">恢复默认</button><button id="lab-copy" class="tune-btn">复制参数</button></div>
+        <button id="lab-apply" class="tune-btn primary">应用到软件</button>
+      </div>
+    </aside>
+  </main>
+  <div id="lab-start" class="lab-start" role="dialog" aria-modal="true" aria-labelledby="lab-start-title">
+    <section aria-labelledby="lab-start-title">
+      <span class="lab-eyebrow">无障碍助手 · 手感调试</span>
+      <h2 id="lab-start-title">给鼠标留出整块屏幕</h2>
+      <p>点击开始后进入浏览器整屏模式。松开鼠标键横向移动，右侧调整参数，左侧查看判定结果。</p>
+      <p class="lab-start-note">试调期间暂停鼠标截图；结束后恢复。未应用的参数不会覆盖软件设置。</p>
+      <button id="lab-begin" class="tune-btn primary" disabled>开始全屏调试</button>
+      <p id="lab-start-message" role="status">正在连接本地服务…</p>
+    </section>
+  </div>
+  <script src="/static/swipe-settings.js?v=20261019.9"></script>
+  <script src="/static/swipe-lab.js?v=20261019.9"></script>
+</body>
+</html>

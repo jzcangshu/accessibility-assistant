@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<!-- 固定黑色主题的应用界面：禁掉 Dark Reader 之类的网页反色扩展，否则它会把
+     设计好的单色层次搅乱（比如把遥控截图按钮的明暗关系翻转） -->
+<meta name="darkreader-lock">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/static/manifest.json">
+<title>无障碍助手</title>
+<link rel="stylesheet" href="/static/style.css?v=20261019.6">
+<link rel="stylesheet" href="/static/swipe.css?v=20261019.9">
+<link rel="stylesheet" href="/static/overlay.css?v=20261019.10">
+</head>
+<body>
+
+<!-- 图标库：单色线条 SVG，currentColor 上色，两种布局共用 -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <defs>
+    <symbol id="i-qr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20.5 14v.01M14 20.5v.01M20.5 20.5v.01M17.5 17.5v.01"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 0 1-6 6 6 6 0 0 1-6-6zM12 17v5"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24M1 1l22 22"/></symbol>
+    <symbol id="i-corner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></symbol>
+    <symbol id="i-swipe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M7 8l-4 4 4 4M17 8l4 4-4 4"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></symbol>
+    <symbol id="i-crop" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14M2 6h14a2 2 0 0 1 2 2v14"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-5-6-5M12 19h8"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-vibrate" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h2M16 3h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2M10 8v8M14 8v8"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="i-timer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+    <symbol id="i-arrow-dn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-reload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
+  </defs>
+</svg>
+
+<!-- ================= 手机布局（默认；PC 布局见 #pc-root） ================= -->
+<div id="phone-root">
+<header>
+  <span id="dot" class="dot connecting"></span>
+  <span id="conn-text">连接中…</span>
+  <span class="grow"></span>
+  <span id="chan-note" class="muted"></span>
+</header>
+
+<main>
+  <!-- 内容视图 -->
+  <section id="view-main" class="view">
+    <div id="empty-state" class="card empty">
+      等待电脑端截图…
+      <small>在电脑上按快捷键，或点击下方按钮让电脑立即截屏</small>
+    </div>
+
+      <div id="q-card" class="card" hidden>
+        <div class="q-meta"><span id="q-time"></span></div>
+        <div id="q-images"></div>
+        <pre id="q-text"></pre>
+        <p id="q-note" class="hint" hidden></p>
+        <div class="btn-row">
+          <button id="btn-save" class="btn sm" disabled>保存图片</button>
+          <button id="btn-copy" class="btn sm">复制文本</button>
+        </div>
+      </div>
+
+      <button id="fit-note" class="fit-note" hidden>内容较长，已自动收起 —— 点击展开</button>
+
+    <div id="ans-card" class="card">
+      <div id="ans-status">等待内容…</div>
+      <div id="ans-answer" hidden></div>
+      <div id="ans-list" hidden></div>
+      <div id="ans-analysis" hidden></div>
+      <div id="ans-meta" hidden></div>
+      <button id="btn-re-ask" class="btn ghost sm" hidden>重新识别</button>
+    </div>
+
+    <!-- 遥控截图：贴地铺满、Tab 栏正上方，主页面所有状态下常驻。
+         点按钮触发一次"遥控电脑立即截屏" -->
+    <div id="snap-dock" class="snap-dock" role="button" tabindex="0"
+         aria-label="遥控截图：点击按钮，让电脑立即截屏">
+      <svg class="snap-ico" aria-hidden="true"><use href="#i-camera"/></svg>
+      <div class="snap-txt">
+        <span id="snap-title" class="snap-title">点击按钮，遥控电脑立即截屏</span>
+        <span id="snap-sub" class="snap-sub">也可在电脑上按快捷键</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 历史视图 -->
+  <section id="view-history" class="view" hidden>
+    <div id="hist-list"></div>
+    <p id="hist-empty" class="hint center">暂无历史记录</p>
+  </section>
+
+  <!-- 设置视图：内容由 app.js 的统一设置渲染器生成（与 PC 布局共用同一份代码） -->
+  <section id="view-settings" class="view" hidden>
+    <div id="phone-settings"></div>
+  </section>
+</main>
+
+<nav id="tabbar">
+  <button data-view="main" class="on">内容</button>
+  <button data-view="history">历史</button>
+  <button data-view="settings">设置</button>
+</nav>
+</div>
+
+<!-- ================= PC 控制台布局（/?pc=1；主窗口 WebView2 与浏览器打开的是同一页） ================= -->
+<div id="pc-root" hidden>
+  <aside id="pc-left" aria-label="连接与运行状态">
+    <div class="pc-head">
+      <div class="pc-brand">
+        <span class="pc-name">无障碍助手</span>
+        <span id="pc-ver" class="pc-ver"></span>
+        <span class="grow"></span>
+        <div class="pc-service" role="status">
+          <span id="pc-dot" class="dot connecting" aria-hidden="true"></span>
+          <span id="pc-head-txt">正在连接</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pc-sec">
+      <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#i-qr"/></svg>手机连接<span class="grow"></span><span id="pc-phones" class="sec-b"></span></div>
+      <div class="pc-conn">
+        <div class="qr-box"><img id="pc-qr" alt="扫码连接手机端"></div>
+        <div class="pc-conn-r">
+          <p class="pc-connect-title">选择网卡后连接</p>
+          <div id="pc-networks" class="network-options" role="group" aria-label="选择网卡"></div>
+          <button id="pc-url" class="pc-url" title="点击复制地址">读取中…</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pc-sec">
+      <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#i-info"/></svg>运行状态
+        <span class="grow"></span>
+        <button id="btn-pc-calibrate" class="btn ghost xs"><svg class="ic" aria-hidden="true"><use href="#i-crop"/></svg>框选区域</button>
+        <button id="btn-pc-overlay" class="btn ghost xs" aria-pressed="false" title="显示悬浮窗"><svg class="ic" aria-hidden="true"><use href="#i-monitor"/></svg>悬浮窗</button>
+      </div>
+      <div id="pc-kv" class="kv"></div>
+    </div>
+
+    <div class="pc-sec pc-log-sec">
+      <div class="sec-h"><svg class="ic" aria-hidden="true"><use href="#i-terminal"/></svg>运行日志
+        <span class="grow"></span>
+        <button id="btn-log-copy" class="ibtn" title="复制全部日志"><svg aria-hidden="true"><use href="#i-copy"/></svg></button>
+        <button id="btn-log-clear" class="ibtn" title="清空显示（文件日志不受影响）"><svg aria-hidden="true"><use href="#i-trash"/></svg></button>
+      </div>
+      <div id="pc-log" class="logview" role="log" aria-label="运行日志" tabindex="0" aria-live="polite"></div>
+    </div>
+
+  </aside>
+
+  <section id="pc-right" aria-label="设置" tabindex="-1">
+    <div class="pc-right-inner">
+      <div class="pc-right-head">
+        <h1 class="pc-right-title">设置</h1>
+        <p class="pc-right-sub">修改后自动保存，并与手机端同步。</p>
+      </div>
+      <!-- 设置内容：与手机布局共用同一份渲染代码（app.js renderSettings） -->
+      <div id="pc-settings"></div>
+    </div>
+  </section>
+</div>
+
+<div id="lightbox" hidden><img id="lb-img" alt=""></div>
+<div id="toast" role="status" hidden></div>
+
+<script src="/static/swipe-settings.js?v=20261019.9"></script>
+<script src="/static/app.js?v=20261019.10"></script>
+</body>
+</html>
